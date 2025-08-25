@@ -1,8 +1,4 @@
-import {rules, createComparison} from "../lib/compare.js";
-
-
 export function initSearching(searchField) {
-    // @todo: #5.1 — настроить компаратор
     const searchComparator = (item, filters) => {
         const searchValue = filters[searchField];
         if (!searchValue) return true; // если поиск пуст, пропускаем проверку
@@ -11,24 +7,17 @@ export function initSearching(searchField) {
         const searchFields = ['date', 'customer', 'seller'];
         const searchTerm = searchValue.toLowerCase();
         
+        // Ищем совпадение в любом из указанных полей
         return searchFields.some(field => {
             const fieldValue = String(item[field] || '').toLowerCase();
             return fieldValue.includes(searchTerm);
         });
     };
 
-    return (data, state, action) => {
-        // @todo: #5.2 — применить компаратор
-        if (action.type === 'filter') {
-            const searchValue = state.filters[searchField];
-            
-            // Пропускаем поиск если поле пустое (skipEmptyTargetValues)
-            if (!searchValue) return data;
-            
-            // Фильтруем данные с помощью компаратора
-            return data.filter(item => searchComparator(item, state.filters));
-        }
-        
-        return data;
+    return (query, state, action) => { // result заменили на query
+    return state[searchField] ? Object.assign({}, query, { // проверяем, что в поле поиска было что-то введено
+        search: state[searchField] // устанавливаем в query параметр
+    }) : query; // если поле с поиском пустое, просто возвращаем query без изменений
+
     };
 }
