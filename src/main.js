@@ -51,7 +51,7 @@ async function render(action) {
 const sampleTable = initTable({
     tableTemplate: 'table',
     rowTemplate: 'row',
-    before: ['search', 'header', 'filter'],
+    before: ['filter', 'header', 'search'],
     after: ['pagination']
 }, render);
 
@@ -77,7 +77,7 @@ const {applyFiltering, updateIndexes} = initFiltering(sampleTable.filter.element
     searchBySeller: {}
 });
 
-const applySearching = initSearching();
+const applySearching = initSearching('search');
 
 const appRoot = document.querySelector('#app');
 appRoot.appendChild(sampleTable.container);
